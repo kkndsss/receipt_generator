@@ -110,6 +110,7 @@ class ReceiptRenderer:
         fill: Tuple = (0, 0, 0),
         align: str = "left",
         width: int = 0,
+        record: bool = True,
     ) -> int:
         """
         텍스트를 그리고 BBoxEntry 를 entries 에 추가.
@@ -150,18 +151,20 @@ class ReceiptRenderer:
             draw._image.paste(rotated_txt, (paste_x, paste_y), rotated_txt)
 
             # bbox 업데이트 (단순화: 회전된 영역을 감싸는 직사각형)
-            entries.append(BBoxEntry(
-                x1=paste_x, y1=paste_y,
-                x2=paste_x + rw, y2=paste_y + rh,
-                text=text,
-            ))
+            if record:
+                entries.append(BBoxEntry(
+                    x1=paste_x, y1=paste_y,
+                    x2=paste_x + rw, y2=paste_y + rh,
+                    text=text,
+                ))
         else:
             draw.text((x_draw, y), text, font=font, fill=fill)
-            entries.append(BBoxEntry(
-                x1=x_draw, y1=y,
-                x2=x_draw + w, y2=y + h,
-                text=text,
-            ))
+            if record:
+                entries.append(BBoxEntry(
+                    x1=x_draw, y1=y,
+                    x2=x_draw + w, y2=y + h,
+                    text=text,
+                ))
 
         return y + h + 2   # 줄 간격 2px
 
@@ -176,7 +179,7 @@ class ReceiptRenderer:
         char = char or self.div_char
         n = max(1, width // max(1, self._text_wh(char, self.font_small)[0]))
         line = char * n
-        return self._draw_text(draw, entries, x, y, line, self.font_small, width=width)
+        return self._draw_text(draw, entries, x, y, line, self.font_small, width=width, record=False)
 
     # ── 섹션별 렌더러 ──────────────────────────
     def _render_header(self, draw, entries, corpus, x, y, w):
