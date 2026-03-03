@@ -253,8 +253,7 @@ def generate_all(n_items=None, seed=None):
     return {
         "company": company,
         "address": address,
-        "date": date_str.split()[0],   # DD/MM/YYYY (entities용)
-        "date_full": date_str,         # DD/MM/YYYY H:MM:SS AM (렌더링용)
+        "date": date_str,             # DD/MM/YYYY H:MM:SS AM (entities/렌더링 공용)
         "doc_no": generate_doc_no(rng),
         "cashier": generate_cashier(),
         "items": items,

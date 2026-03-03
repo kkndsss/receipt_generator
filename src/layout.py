@@ -223,7 +223,7 @@ class ReceiptRenderer:
 
         # DATE/CASHIER 위치 무작위화
         info_lines = [
-            ("DATE:", corpus["date_full"], 60),
+            ("DATE:", corpus["date"], 60),
             ("CASHIER:", corpus["cashier"], 70)
         ]
         if self.rng.random() > 0.5:

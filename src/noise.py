@@ -34,8 +34,9 @@ def apply_background_tint(img: Image.Image, strength: float = 0.5) -> Image.Imag
     arr = _to_np(img)
     # 배경(밝은 픽셀)에만 황변 적용
     mask = arr.mean(axis=2) > 200   # shape (H, W)
-    level = strength * 22
-    arr[mask, 1] -= level * 0.3    # G 약간 감소
+    level = strength * 35  # 22 -> 35 로 상향
+    arr[mask, 0] -= level * 0.1    # R 아주 약간 감소
+    arr[mask, 1] -= level * 0.4    # G 약간 감소
     arr[mask, 2] -= level          # B 감소 (노랗게)
     return _to_pil(arr)
 
@@ -200,7 +201,8 @@ def apply_pipeline(
     # 1. 배경 황변
     bg_aging = opts.get("bg_aging", 0.0)
     if bg_aging > 0:
-        img = apply_background_tint(img, strength=bg_aging * ns * r.uniform(0.6, 1.0))
+        # General Noise(ns)와 독립시키고 기본 강도 상향
+        img = apply_background_tint(img, strength=bg_aging * r.uniform(0.8, 1.2))
 
     # 2. 가우시안 노이즈
     sigma = ns * r.uniform(0, 12)
@@ -215,7 +217,8 @@ def apply_pipeline(
     # 4. 원통형 왜곡
     barrel_amt = opts.get("barrel_amt", 0.0)
     if barrel_amt > 0:
-        k = barrel_amt * ns * r.uniform(0.5, 1.5)
+        # General Noise(ns)와 독립
+        k = barrel_amt * r.uniform(0.8, 1.2)
         img = apply_barrel_distortion(img, k=k)
 
     # 5. 밝기/대비

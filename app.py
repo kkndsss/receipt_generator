@@ -177,16 +177,16 @@ class ReceiptGeneratorApp(tk.Tk):
 
         # JPEG 품질
         self._make_scale(left, row=12, label="JPEG quality:",
-                         varname="var_jpeg", from_=60, to=100, resolution=5,
+                         varname="var_jpeg", from_=30, to=100, resolution=5,
                          default=85, as_int=True)
 
         # 구분선
         ttk.Separator(left, orient="horizontal").grid(
-            row=12, column=0, columnspan=3, sticky="ew", pady=8)
+            row=13, column=0, columnspan=3, sticky="ew", pady=8)
 
         # 랜덤 모드 (세분화)
         rand_frame = tk.LabelFrame(left, text="✨ Auto-Randomize (Override sliders)", fg="#E67E22")
-        rand_frame.grid(row=13, column=0, columnspan=3, sticky="ew", **PAD)
+        rand_frame.grid(row=14, column=0, columnspan=3, sticky="ew", **PAD)
         
         self.var_rand_font   = tk.BooleanVar(value=False)
         self.var_rand_items  = tk.BooleanVar(value=False)
