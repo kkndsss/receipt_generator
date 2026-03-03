@@ -286,14 +286,15 @@ class ReceiptGeneratorApp(tk.Tk):
         import random as _rnd
         if font_sel == "Random":
             font_name = _rnd.choice([
-                "Courier Prime", "Share Tech Mono",
-                "Cutive Mono", "Special Elite", "OCR-B",
+                "Courier Prime", "Share Tech Mono", "Cutive Mono", 
+                "Special Elite", "VT323", "IBM Plex Mono", "Space Mono",
+                "Nanum Gothic", "Anonymous Pro", "Nova Mono"
             ])
         else:
             font_name = font_sel
 
         return {
-            "font_name": self.var_font.get(),
+            "font_name":     font_name,
             "body_size":     12,
             "layout_style": self.var_layout.get().lower(),
             "n_items_min": self.var_items_min.get(),

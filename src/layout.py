@@ -77,6 +77,7 @@ class ReceiptRenderer:
         body_size: int = 12,
         rng: Optional[random.Random] = None,
         jitter_max_angle: float = 0.0,
+        layout_style: str = "random",
     ):
         self.body_size = body_size
         self.rng = rng or random.Random()
