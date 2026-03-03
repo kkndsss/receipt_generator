@@ -69,11 +69,11 @@ def generate_batch(
     r_jpeg   = opts.get("rand_jpeg", False)
 
     renderers = {}
-    def get_renderer(f_name, j_max, rng):
-        key = (f_name, j_max)
+    def get_renderer(f_name, j_max, l_style, rng):
+        key = (f_name, j_max, l_style)
         if key not in renderers:
             renderers[key] = ReceiptRenderer(
-                font_name=f_name, rng=rng, jitter_max_angle=j_max
+                font_name=f_name, rng=rng, jitter_max_angle=j_max, layout_style=l_style
             )
         return renderers[key]
 
@@ -83,7 +83,13 @@ def generate_batch(
         item_rng = random.Random(master_rng.randint(0, 2**31))
         
         # --- 파라미터 결정 ---
-        cur_font = item_rng.choice(["Courier Prime", "Share Tech Mono", "Cutive Mono", "Special Elite", "OCR-B"]) if r_font else font_fixed
+        all_fonts = [
+            "Courier Prime", "Share Tech Mono", "Cutive Mono", 
+            "Special Elite", "VT323", "IBM Plex Mono", "Space Mono",
+            "Nanum Gothic", "Anonymous Pro", "Nova Mono"
+        ]
+        cur_font = item_rng.choice(all_fonts) if r_font else font_fixed
+        cur_layout = opts.get("layout_style", "random").lower()
         cur_jitter = item_rng.uniform(0.0, 1.0) if r_jitter else jitter_fixed
         cur_n_items = item_rng.randint(1, 12) if r_items else item_rng.randint(n_min, n_max)
         cur_jpeg = item_rng.randint(65, 95) if r_jpeg else jpeg_fixed
@@ -106,7 +112,7 @@ def generate_batch(
         else:
             cur_opts["barrel_amt"] = barrel_fixed
 
-        renderer = get_renderer(cur_font, cur_jitter, master_rng)
+        renderer = get_renderer(cur_font, cur_jitter, cur_layout, master_rng)
         corpus = generate_all(n_items=cur_n_items, seed=item_rng.randint(0, 2**31))
 
         img, entries = renderer.render(corpus)

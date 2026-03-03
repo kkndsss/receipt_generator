@@ -126,50 +126,57 @@ class ReceiptGeneratorApp(tk.Tk):
         ttk.Combobox(left, textvariable=self.var_font, values=font_choices,
                      state="readonly", width=22).grid(row=2, column=1, sticky="w", **PAD)
 
+        # 레이아웃 스타일
+        tk.Label(left, text="Layout Style:", anchor="w").grid(row=3, column=0, sticky="w", **PAD)
+        self.var_layout = tk.StringVar(value="Random")
+        layout_choices = ["Random", "Classic", "Modern", "Dense"]
+        ttk.Combobox(left, textvariable=self.var_layout, values=layout_choices,
+                     state="readonly", width=22).grid(row=3, column=1, sticky="w", **PAD)
+
         # 품목 수 범위
-        tk.Label(left, text="Items (min/max):", anchor="w").grid(row=3, column=0, sticky="w", **PAD)
+        tk.Label(left, text="Items (min/max):", anchor="w").grid(row=4, column=0, sticky="w", **PAD)
         item_frame = tk.Frame(left)
-        item_frame.grid(row=3, column=1, sticky="w", **PAD)
+        item_frame.grid(row=4, column=1, sticky="w", **PAD)
         self.var_items_min = tk.IntVar(value=1)
+        tk.Spinbox(item_frame, from_=1, to=30, textvariable=self.var_items_min, width=5).pack(side="left")
+        tk.Label(item_frame, text="~").pack(side="left")
         self.var_items_max = tk.IntVar(value=8)
-        tk.Spinbox(item_frame, from_=1, to=20, textvariable=self.var_items_min, width=5).pack(side="left")
-        tk.Label(item_frame, text=" ~ ").pack(side="left")
-        tk.Spinbox(item_frame, from_=1, to=20, textvariable=self.var_items_max, width=5).pack(side="left")
+        tk.Spinbox(item_frame, from_=1, to=30, textvariable=self.var_items_max, width=5).pack(side="left")
 
         # 구분선
         ttk.Separator(left, orient="horizontal").grid(
-            row=4, column=0, columnspan=3, sticky="ew", pady=6)
+            row=5, column=0, columnspan=3, sticky="ew", pady=6)
 
         # 노이즈 강도 (가우시안 노이즈 기본 스케일)
-        self._make_scale(left, row=5, label="General Noise:",
+        self._make_scale(left, row=6, label="General Noise:",
                          varname="var_noise", from_=0.0, to=1.0, resolution=0.05,
                          default=0.4)
         # 최대 회전 각도
-        self._make_scale(left, row=6, label="Max rotation (°):",
+        self._make_scale(left, row=7, label="Max rotation (°):",
                          varname="var_angle", from_=0.0, to=5.0, resolution=0.5,
                          default=0.0)
         # 줄별 지터 (미세 기울기)
-        self._make_scale(left, row=7, label="Line Jitter (°):",
+        self._make_scale(left, row=8, label="Line Jitter (°):",
                          varname="var_line_jitter", from_=0.0, to=2.0, resolution=0.1,
                          default=0.0)
         
         # 배경 황변 (Thermal Aging)
-        self._make_scale(left, row=8, label="BG Aging strength:",
+        self._make_scale(left, row=9, label="BG Aging strength:",
                          varname="var_bg_aging", from_=0.0, to=1.0, resolution=0.1,
                          default=0.3)
         
         # 원통형 왜곡 (Barrel)
-        self._make_scale(left, row=9, label="Barrel distort:",
+        self._make_scale(left, row=10, label="Barrel distort:",
                          varname="var_barrel_amt", from_=0.0, to=0.05, resolution=0.005,
                          default=0.0)
 
         # 모션 블러 (Blur)
-        self._make_scale(left, row=10, label="Motion Blur amt:",
+        self._make_scale(left, row=11, label="Motion Blur amt:",
                          varname="var_blur_size", from_=0, to=5, resolution=1,
                          default=0, as_int=True)
 
         # JPEG 품질
-        self._make_scale(left, row=11, label="JPEG quality:",
+        self._make_scale(left, row=12, label="JPEG quality:",
                          varname="var_jpeg", from_=60, to=100, resolution=5,
                          default=85, as_int=True)
 
@@ -286,9 +293,10 @@ class ReceiptGeneratorApp(tk.Tk):
             font_name = font_sel
 
         return {
-            "font_name":     font_name,
+            "font_name": self.var_font.get(),
             "body_size":     12,
-            "n_items_min":   self.var_items_min.get(),
+            "layout_style": self.var_layout.get().lower(),
+            "n_items_min": self.var_items_min.get(),
             "n_items_max":   self.var_items_max.get(),
             "line_jitter":   self.var_line_jitter.get(),
             "noise_strength":self.var_noise.get(),

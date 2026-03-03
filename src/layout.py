@@ -78,10 +78,15 @@ class ReceiptRenderer:
         rng: Optional[random.Random] = None,
         jitter_max_angle: float = 0.0,
     ):
-        self.font_name = font_name
         self.body_size = body_size
         self.rng = rng or random.Random()
         self.jitter_max_angle = jitter_max_angle
+
+        # 레이아웃 스타일: "classic", "modern", "dense"
+        self.layout_style = self.rng.choice(["classic", "modern", "dense"])
+
+        # 구분선 문자 무작위화
+        self.div_char = self.rng.choice(["-", "=", "*", ".", "#"])
 
         # 본문 / 헤더 / 작은 글씨
         self.font_body  = load_font(font_name, body_size)
@@ -165,17 +170,21 @@ class ReceiptRenderer:
         entries: List[BBoxEntry],
         x: int, y: int,
         width: int,
-        char: str = "-",
+        char: Optional[str] = None,
     ) -> int:
+        char = char or self.div_char
         n = max(1, width // max(1, self._text_wh(char, self.font_small)[0]))
         line = char * n
         return self._draw_text(draw, entries, x, y, line, self.font_small, width=width)
 
     # ── 섹션별 렌더러 ──────────────────────────
     def _render_header(self, draw, entries, corpus, x, y, w):
-        # 회사명 (중앙, 굵게)
+        # 스타일 결정
+        align = "center" if self.layout_style in ["classic", "dense"] else "left"
+
+        # 회사명 (굵게)
         y = self._draw_text(draw, entries, x, y, corpus["company"],
-                            self.font_title, align="center", width=w)
+                            self.font_title, align=align, width=w)
         y += 2
 
         # 주소 (줄바꿈 포함)
@@ -183,8 +192,9 @@ class ReceiptRenderer:
         # 2~3줄로 합치기
         grouped = []
         buf = ""
+        max_len = 38 if align == "center" else 45
         for part in addr_lines:
-            if len(buf) + len(part) > 38:
+            if len(buf) + len(part) > max_len:
                 grouped.append(buf.rstrip(", "))
                 buf = part + ", "
             else:
@@ -194,35 +204,41 @@ class ReceiptRenderer:
 
         for line in grouped:
             y = self._draw_text(draw, entries, x, y, line,
-                                self.font_small, align="center", width=w)
+                                self.font_small, align=align, width=w)
         y += 4
         return y
 
     def _render_doc_info(self, draw, entries, corpus, x, y, w):
-        y = self._divider(draw, entries, x, y, w, "-")
+        # Dense 스타일이면 구분선 생략하거나 줄임
+        if self.layout_style != "dense":
+            y = self._divider(draw, entries, x, y, w)
+
         y = self._draw_text(draw, entries, x, y,
                             f"DOCUMENT NO : {corpus['doc_no']}",
                             self.font_small)
 
-        # DATE 행: 라벨과 값을 같은 y에 배치
-        date_y = y
-        self._draw_text(draw, entries, x, date_y, "DATE:", self.font_small)
-        y = self._draw_text(draw, entries, x + 60, date_y,
-                            corpus["date_full"], self.font_small)
+        # DATE/CASHIER 위치 무작위화
+        info_lines = [
+            ("DATE:", corpus["date_full"], 60),
+            ("CASHIER:", corpus["cashier"], 70)
+        ]
+        if self.rng.random() > 0.5:
+            info_lines.reverse()
 
-        # CASHIER 행: 라벨과 값을 같은 y에 배치
-        cashier_y = y
-        self._draw_text(draw, entries, x, cashier_y, "CASHIER:", self.font_small)
-        y = self._draw_text(draw, entries, x + 70, cashier_y,
-                            corpus["cashier"], self.font_small)
+        for label, val, offset in info_lines:
+            self._draw_text(draw, entries, x, y, label, self.font_small)
+            y = self._draw_text(draw, entries, x + offset, y, val, self.font_small)
 
-        y += 4
-        y = self._divider(draw, entries, x, y, w, "-")
-        y += 2
-        # CASH BILL
-        y = self._draw_text(draw, entries, x, y,
-                            "CASH BILL", self.font_small, align="center", width=w)
-        y += 6
+        if self.layout_style != "dense":
+            y += 4
+            y = self._divider(draw, entries, x, y, w)
+            y += 2
+            # CASH BILL
+            y = self._draw_text(draw, entries, x, y,
+                                "CASH BILL", self.font_small, align="center", width=w)
+            y += 6
+        else:
+            y += 4
         return y
 
     def _render_items_header(self, draw, entries, x, y, w):
@@ -306,16 +322,23 @@ class ReceiptRenderer:
 
     def _render_footer(self, draw, entries, corpus, x, y, w):
         y += 12
-        y = self._divider(draw, entries, x, y, w, "*")
+        y = self._divider(draw, entries, x, y, w)
+        align = "center" if self.layout_style in ["classic", "dense"] else "left"
+
         for line in corpus["footer"]:
             y = self._draw_text(draw, entries, x, y, line,
-                                self.font_small, align="center", width=w)
-        y = self._divider(draw, entries, x, y, w, "*")
+                                self.font_small, align=align, width=w)
+
+        y = self._divider(draw, entries, x, y, w)
         y += 6
-        y = self._draw_text(draw, entries, x, y, "THANK YOU",
-                            self.font_small, align="center", width=w)
-        y = self._draw_text(draw, entries, x, y, "PLEASE COME AGAIN !",
-                            self.font_small, align="center", width=w)
+
+        msgs = ["THANK YOU", "PLEASE COME AGAIN !"]
+        if self.layout_style == "modern":
+            msgs = [m.title() for m in msgs] # 캐주얼하게 변환
+
+        for msg in msgs:
+            y = self._draw_text(draw, entries, x, y, msg,
+                                self.font_small, align=align, width=w)
         return y
 
     # ── 공개 API ──────────────────────────────

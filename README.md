@@ -26,6 +26,7 @@ python app.py
 | **Barrel distort** | 영수증 종이가 둥글게 말려있는 듯한 왜곡 강도. | 0.0 |
 | **Motion Blur amt** | 스캔 흔들림 효과의 밀림 정도 (0: 없음). | 0 |
 | **JPEG quality** | JPEG 압축 손실 정도. 낮을수록 아티팩트가 심함. | 85 |
+| **Layout Style**   | **[신규]** Classic, Modern(좌측 정렬), Dense(항목 간격 압축) 스타일 중 선택 또는 무작위 선택 | - |
 | **Auto-Randomize** | **[신규]** 체크한 항목(Font, Items, Noise, Rotation, Jitter, BG, Barrel, Blur, JPEG)을 매 장마다 자동 무작위화함. | - |
 | **Fix seed** | 동일한 데이터를 재생성하기 위한 랜덤 시드 고정 | - |
 
