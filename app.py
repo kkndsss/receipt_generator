@@ -22,7 +22,12 @@ FONT_URLS = {
     "ShareTechMono-Regular.ttf":  "https://github.com/google/fonts/raw/main/ofl/sharetechmono/ShareTechMono-Regular.ttf",
     "CutiveMono-Regular.ttf":     "https://github.com/google/fonts/raw/main/ofl/cutivemono/CutiveMono-Regular.ttf",
     "SpecialElite-Regular.ttf":   "https://github.com/google/fonts/raw/main/apache/specialelite/SpecialElite-Regular.ttf",
-    "OCRB.ttf":                   "https://github.com/twardoch/ur-ocrb-font/raw/master/fonts/OCRB.ttf",
+    "VT323-Regular.ttf":          "https://github.com/google/fonts/raw/main/ofl/vt323/VT323-Regular.ttf",
+    "IBMPlexMono-Regular.ttf":    "https://github.com/google/fonts/raw/main/ofl/ibmplexmono/IBMPlexMono-Regular.ttf",
+    "SpaceMono-Regular.ttf":      "https://github.com/google/fonts/raw/main/ofl/spacemono/SpaceMono-Regular.ttf",
+    "NanumGothicCoding-Regular.ttf": "https://github.com/google/fonts/raw/main/ofl/nanumgothiccoding/NanumGothicCoding-Regular.ttf",
+    "AnonymousPro-Regular.ttf":   "https://github.com/google/fonts/raw/main/ofl/anonymouspro/AnonymousPro-Regular.ttf",
+    "NovaMono.ttf":               "https://github.com/google/fonts/raw/main/ofl/novamono/NovaMono.ttf",
 }
 
 
@@ -50,10 +55,10 @@ def ensure_fonts(log_cb=None):
             with open(dest, "wb") as f:
                 f.write(r.content)
             if log_cb:
-                log_cb(f"  ✓ {fname}")
+                log_cb(f"  [DONE] {fname}")
         except Exception as e:
             if log_cb:
-                log_cb(f"  ✗ {fname}: {e}")
+                log_cb(f"  [ERROR] {fname}: {e}")
 
 
 # ──────────────────────────────────────────────
@@ -113,8 +118,11 @@ class ReceiptGeneratorApp(tk.Tk):
         # 폰트
         tk.Label(left, text="Font:", anchor="w").grid(row=2, column=0, sticky="w", **PAD)
         self.var_font = tk.StringVar(value="Random")
-        font_choices = ["Random", "Courier Prime", "Share Tech Mono",
-                        "Cutive Mono", "Special Elite", "OCR-B"]
+        font_choices = [
+            "Random", "Courier Prime", "Share Tech Mono", "Cutive Mono", 
+            "Special Elite", "VT323", "IBM Plex Mono", "Space Mono", 
+            "Nanum Gothic", "Anonymous Pro", "Nova Mono"
+        ]
         ttk.Combobox(left, textvariable=self.var_font, values=font_choices,
                      state="readonly", width=22).grid(row=2, column=1, sticky="w", **PAD)
 

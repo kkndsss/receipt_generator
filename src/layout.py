@@ -28,7 +28,12 @@ FONT_FILES = {
     "Share Tech Mono": "ShareTechMono-Regular.ttf",
     "Cutive Mono":     "CutiveMono-Regular.ttf",
     "Special Elite":   "SpecialElite-Regular.ttf",
-    "OCR-B":           "OCRB.ttf",
+    "VT323":           "VT323-Regular.ttf",
+    "IBM Plex Mono":   "IBMPlexMono-Regular.ttf",
+    "Space Mono":      "SpaceMono-Regular.ttf",
+    "Nanum Gothic":    "NanumGothicCoding-Regular.ttf",
+    "Anonymous Pro":   "AnonymousPro-Regular.ttf",
+    "Nova Mono":       "NovaMono.ttf",
 }
 
 
