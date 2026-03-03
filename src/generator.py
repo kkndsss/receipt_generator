@@ -88,11 +88,23 @@ def generate_batch(
             "Special Elite", "VT323", "IBM Plex Mono", "Space Mono",
             "Nanum Gothic", "Anonymous Pro", "Nova Mono"
         ]
-        cur_font = item_rng.choice(all_fonts) if r_font else font_fixed
-        cur_layout = opts.get("layout_style", "random").lower()
+        
+        # 폰트 결정: 'Auto-Randomize' 체크박스 혹은 드롭다운 'Random' 선택 시 매번 무작위
+        if r_font or font_fixed == "Random":
+            cur_font = item_rng.choice(all_fonts)
+        else:
+            cur_font = font_fixed
+
+        # 레이아웃 결정: 드롭다운이 'random'이면 매번 무작위 하나 선택 (캐시 효율을 위해 미리 결정)
+        layout_opt = opts.get("layout_style", "random").lower()
+        if layout_opt == "random":
+            cur_layout = item_rng.choice(["classic", "modern", "dense"])
+        else:
+            cur_layout = layout_opt
+
         cur_jitter = item_rng.uniform(0.0, 1.0) if r_jitter else jitter_fixed
         cur_n_items = item_rng.randint(1, 12) if r_items else item_rng.randint(n_min, n_max)
-        cur_jpeg = item_rng.randint(65, 95) if r_jpeg else jpeg_fixed
+        cur_jpeg = item_rng.randint(60, 95) if r_jpeg else jpeg_fixed
         cur_blur = item_rng.randint(0, 4) if r_blur else blur_fixed
         
         cur_opts = opts.copy()
@@ -100,15 +112,15 @@ def generate_batch(
         if r_noise:
             cur_opts["noise_strength"] = item_rng.uniform(0.2, 0.8)
         if r_rot:
-            cur_opts["max_angle"] = item_rng.uniform(1.0, 3.0)
+            cur_opts["max_angle"] = item_rng.uniform(1.0, 3.5)
         
         if r_bg:
-            cur_opts["bg_aging"] = item_rng.uniform(0.1, 0.6)
+            cur_opts["bg_aging"] = item_rng.uniform(0.2, 0.8)
         else:
             cur_opts["bg_aging"] = bg_fixed
 
         if r_barrel:
-            cur_opts["barrel_amt"] = item_rng.uniform(0.005, 0.02)
+            cur_opts["barrel_amt"] = item_rng.uniform(0.005, 0.025)
         else:
             cur_opts["barrel_amt"] = barrel_fixed
 

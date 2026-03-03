@@ -84,7 +84,11 @@ class ReceiptRenderer:
         self.jitter_max_angle = jitter_max_angle
 
         # 레이아웃 스타일: "classic", "modern", "dense"
-        self.layout_style = self.rng.choice(["classic", "modern", "dense"])
+        valid_styles = ["classic", "modern", "dense"]
+        if layout_style.lower() in valid_styles:
+            self.layout_style = layout_style.lower()
+        else:
+            self.layout_style = self.rng.choice(valid_styles)
 
         # 구분선 문자 무작위화
         self.div_char = self.rng.choice(["-", "=", "*", ".", "#"])
