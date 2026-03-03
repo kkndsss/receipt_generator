@@ -29,6 +29,23 @@ python app.py
 | **Auto-Randomize** | **[신규]** 체크한 항목(Font, Items, Noise, Rotation, Jitter, BG, Barrel, Blur, JPEG)을 매 장마다 자동 무작위화함. | - |
 | **Fix seed** | 동일한 데이터를 재생성하기 위한 랜덤 시드 고정 | - |
 
+## 🖋️ 폰트 및 라이선스 (Fonts & License)
+
+본 프로젝트는 영수증 특유의 질감을 재현하기 위해 다음 10종의 오픈소스 폰트를 사용합니다. 모든 폰트는 **SIL Open Font License (OFL)** 또는 **Apache License 2.0** 하에 배포되므로, 상업적 이용 및 학습/연구 목적으로 자유롭게 사용할 수 있습니다.
+
+| 폰트명 | 스타일 특징 | 라이선스 |
+|---|---|---|
+| **Courier Prime** | 클래식 도트 프린터 / 타자기 느낌 | OFL |
+| **Share Tech Mono** | 세련된 현대식 감열 영수증 느낌 | OFL |
+| **Cutive Mono** | 빈티지 타자기 스타일 | OFL |
+| **Special Elite** | 거친 인쇄 질감이 살아있는 구형 영수증 | Apache 2.0 |
+| **VT323** | **[추천]** 전형적인 8비트/도트 매트릭스 프린터 스타일 | OFL |
+| **IBM Plex Mono** | 가독성이 뛰어난 현대적 영수증 스타일 | OFL |
+| **Space Mono** | 미래지향적/기계적인 느낌의 영수증 | OFL |
+| **Nanum Gothic** | 깔끔한 나눔고딕 코딩용 가변폭 폰트 | OFL |
+| **Anonymous Pro** | 좁은 간격의 기계식 폰트 | OFL |
+| **Nova Mono** | 독특한 디자인의 기계적 폰트 | OFL |
+
 ## 디렉토리 구조
 
 ```
